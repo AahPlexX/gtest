@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>North America & U.S. Regions Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 h-[100dvh] overflow-hidden flex flex-col select-none">
+
+  <!-- Top Navigation / Header -->
+  <header class="bg-white border-b border-slate-200 shrink-0 z-30 shadow-2xs">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-12 sm:h-14 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-2xs shrink-0">
+          NA
+        </div>
+        <div class="truncate">
+          <h1 class="font-bold text-slate-900 text-sm sm:text-base leading-tight truncate">Geography Assessment</h1>
+          <p class="text-[11px] text-slate-500 hidden sm:block truncate">North America, Equator, Prime Meridian & U.S. Regions</p>
+        </div>
+      </div>
+
+      <!-- Real-Time Progress & Actions -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <div id="liveStatsBadge" class="hidden md:flex items-center gap-2 bg-slate-100 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-700">
+          <span>Answered: <strong id="headerAnsweredCount" class="text-indigo-600">0</strong>/100</span>
+          <span class="text-slate-300">|</span>
+          <span>Accuracy: <strong id="headerAccuracy" class="text-emerald-600">0%</strong></span>
+        </div>
+
+        <button id="switchViewBtn" class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition">
+          <svg id="switchViewIcon" class="w-3.5 h-3.5 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span id="switchViewText" class="truncate max-w-[110px] sm:max-w-none">Dashboard</span>
+          <span id="historyCountBadge" class="px-1.5 py-0.2 text-[10px] font-bold bg-indigo-100 text-indigo-700 rounded-full">0</span>
+        </button>
+
+        <button id="submitEarlyBtn" class="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-2xs transition disabled:opacity-40 disabled:cursor-not-allowed">
+          <span>Finish</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- VIEW 1: Dashboard & Score History (Overview) - Fits in 100dvh without page scroll -->
+  <div id="dashboardView" class="max-w-5xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-3 sm:py-5 flex-1 flex flex-col gap-3 sm:gap-4 min-h-0 overflow-hidden">
+    <!-- Hero Launch Card -->
+    <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-2xs shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="space-y-1 max-w-xl">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-indigo-50 text-indigo-700">
+          100 Multiple-Choice Questions
+        </span>
+        <h2 class="text-base sm:text-xl font-bold text-slate-900 leading-snug">North America & U.S. Regions Assessment</h2>
+        <p class="text-xs text-slate-600 leading-relaxed hidden sm:block">
+          Enter the standalone focus mode to take the assessment without distractions. Progress is automatically saved.
+        </p>
+      </div>
+      <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
+        <button id="resetAttemptBtn" class="px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 transition text-center hidden">
+          Reset Attempt
+        </button>
+        <button id="startOrResumeQuizBtn" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-2xs transition">
+          <span id="startOrResumeText">Enter Standalone Quiz</span>
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Current Session Progress Overview (Always 3 columns even on mobile to save vertical space) -->
+    <div class="grid grid-cols-3 gap-2 sm:gap-4 shrink-0">
+      <div class="bg-white p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+        <div>
+          <div class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Taken</div>
+          <div id="dashStatAnswered" class="text-base sm:text-2xl font-extrabold text-slate-900 mt-0.5">0/100</div>
+        </div>
+        <div class="hidden sm:flex w-9 h-9 rounded-xl bg-slate-100 text-slate-600 items-center justify-center font-mono text-xs font-bold">
+          Q
+        </div>
+      </div>
+      <div class="bg-white p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+        <div>
+          <div class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Correct</div>
+          <div id="dashStatCorrect" class="text-base sm:text-2xl font-extrabold text-emerald-600 mt-0.5">0</div>
+        </div>
+        <div class="hidden sm:flex w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 items-center justify-center font-bold">
+          ✓
+        </div>
+      </div>
+      <div class="bg-white p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+        <div>
+          <div class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400">Accuracy</div>
+          <div id="dashStatPercent" class="text-base sm:text-2xl font-extrabold text-indigo-600 mt-0.5">0%</div>
+        </div>
+        <div class="hidden sm:flex w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 items-center justify-center font-bold">
+          %
+        </div>
+      </div>
+    </div>
+
+    <!-- Persistent Score History Section (Flex-1 with internal scroll if list gets long) -->
+    <section id="scoreHistorySection" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs flex-1 flex flex-col min-h-0 overflow-hidden">
+      <div class="px-4 py-2.5 sm:px-5 sm:py-3.5 border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div class="min-w-0 pr-2">
+          <h2 class="text-xs sm:text-sm font-bold text-slate-900">Recorded Score History</h2>
+          <p class="text-[11px] text-slate-500 truncate">Stored upon completion or early finish (XX/100 + accuracy %).</p>
+        </div>
+        <button id="clearHistoryBtn" class="text-xs text-rose-600 hover:text-rose-700 font-semibold shrink-0 hidden">Clear History</button>
+      </div>
+      <div class="p-3 sm:p-4 flex-1 overflow-y-auto custom-scrollbar">
+        <div id="historyList" class="flex flex-col gap-2">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- VIEW 2: Standalone Focused Quiz View - Fits 100% within viewport with zero page scroll -->
+  <div id="quizStandaloneView" class="hidden max-w-3xl mx-auto w-full px-3 sm:px-6 py-2.5 sm:py-4 flex-1 flex flex-col gap-2.5 sm:gap-3 min-h-0 overflow-hidden relative">
+    
+    <!-- Top Focus Bar: Progress & Quick Jump Drawer Trigger -->
+    <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 px-3 py-2 sm:p-3 shadow-2xs shrink-0 flex flex-col gap-2 relative z-20">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <button id="backToDashboardBtn" class="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg transition shrink-0">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Home</span>
+          </button>
+          <span class="text-xs font-medium text-slate-600 truncate">
+            <strong id="statAnswered" class="text-slate-900">0/100</strong>
+            <span class="text-slate-400 mx-0.5">•</span>
+            <strong id="statCorrect" class="text-emerald-600">0</strong>✓
+            <span class="text-slate-400 mx-0.5">•</span>
+            <strong id="statPercent" class="text-indigo-600">0%</strong>
+          </span>
+        </div>
+
+        <button id="toggleNavigatorBtn" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 transition shrink-0">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+          </svg>
+          <span>Map</span>
+        </button>
+      </div>
+
+      <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+        <div id="progressBar" class="bg-indigo-600 h-full transition-all duration-300" style="width: 0%"></div>
+      </div>
+
+      <!-- Floating Question Map & Section Drawer Overlay (Doesn't push quiz card off screen) -->
+      <div id="navigatorDrawer" class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white rounded-2xl border border-slate-200 shadow-xl p-3.5 z-40 flex flex-col gap-3 max-h-[70dvh] overflow-y-auto custom-scrollbar">
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <h3 class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Jump to Section</h3>
+            <button id="closeNavigatorBtn" class="text-xs text-slate-400 hover:text-slate-600 font-medium">Close ✕</button>
+          </div>
+          <div id="partButtonsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <h3 class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Question Map (1–100)</h3>
+            <div class="flex items-center gap-2 text-[10px] text-slate-500">
+              <span class="inline-block w-2 h-2 rounded-xs bg-emerald-500"></span> Correct
+              <span class="inline-block w-2 h-2 rounded-xs bg-rose-500"></span> Wrong
+            </div>
+          </div>
+          <div id="questionGrid" class="grid grid-cols-10 gap-1 max-h-40 overflow-y-auto custom-scrollbar pr-1">
+            <!-- 1-100 buttons -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Standalone Question Card -->
+    <div id="quizCard" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs flex-1 flex flex-col justify-between min-h-0 overflow-hidden">
+      <!-- Part Banner -->
+      <div class="bg-slate-900 text-white px-3.5 py-2 sm:px-5 sm:py-3 flex items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center gap-2 min-w-0">
+          <span id="partBadge" class="px-2 py-0.5 text-[10px] sm:text-xs font-semibold bg-indigo-500 text-white rounded-full shrink-0">Part 1</span>
+          <span id="partTitle" class="text-xs sm:text-sm font-medium text-slate-200 truncate">North America, Equator, and Prime Meridian</span>
+        </div>
+        <span id="questionCounterText" class="text-[11px] sm:text-xs font-mono text-slate-400 shrink-0">1 / 100</span>
+      </div>
+
+      <!-- Question Body (Automatically scales & centers without scrolling) -->
+      <div class="p-3.5 sm:p-6 flex-1 flex flex-col justify-between gap-2.5 sm:gap-4 min-h-0 overflow-y-auto custom-scrollbar">
+        <div class="flex flex-col gap-2.5 sm:gap-4 my-auto">
+          <h3 id="questionText" class="text-sm sm:text-lg md:text-xl font-semibold text-slate-900 leading-snug">
+            Loading question...
+          </h3>
+
+          <!-- Options List -->
+          <div id="optionsContainer" class="flex flex-col gap-2 sm:gap-2.5">
+            <!-- Populated dynamically -->
+          </div>
+
+          <!-- Compact Rationale Box -->
+          <div id="rationaleBox" class="hidden rounded-xl p-2.5 sm:p-3.5 border text-xs sm:text-sm leading-snug transition-all">
+            <div class="font-semibold mb-0.5 flex items-center gap-1.5" id="rationaleHeader"></div>
+            <p id="rationaleText" class="text-slate-700"></p>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation Controls (Pinned cleanly at bottom of card) -->
+        <div class="pt-2.5 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-2 shrink-0">
+          <button id="prevBtn" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-40 disabled:pointer-events-none transition">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            <span>Prev</span>
+          </button>
+
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <button id="nextUnansweredBtn" class="inline-flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 transition">
+              <span>Next Unanswered</span>
+            </button>
+            <button id="nextBtn" class="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none transition">
+              <span>Next</span>
+              <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Custom Confirmation Modal (For Reset / Clear History) -->
+  <div id="confirmModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-200">
+      <h3 id="confirmModalTitle" class="text-base font-bold text-slate-900 mb-2">Confirm Action</h3>
+      <p id="confirmModalDesc" class="text-sm text-slate-600 mb-6"></p>
+      <div class="flex items-center justify-end gap-3">
+        <button id="confirmModalCancel" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">Cancel</button>
+        <button id="confirmModalAccept" class="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 transition">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Completion / Early Submit Modal -->
+  <div id="submitModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+      <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <h3 id="modalTitle" class="text-lg font-bold text-slate-900 mb-1">Record Quiz Score?</h3>
+      <p id="modalDescription" class="text-sm text-slate-600 mb-4"></p>
+
+      <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 mb-6 flex items-center justify-between">
+        <div>
+          <div class="text-xs text-slate-500 uppercase font-semibold">Calculated Score</div>
+          <div id="modalScorePercent" class="text-3xl font-extrabold text-indigo-600">100%</div>
+          <div id="modalCorrectBreakdown" class="text-xs text-slate-600 mt-0.5">0 of 0 answered correct</div>
+        </div>
+        <div class="text-right">
+          <span id="modalTakenBadge" class="inline-block px-3 py-1 rounded-lg bg-slate-200 text-slate-800 font-mono text-sm font-bold">
+            0/100 Questions
+          </span>
+          <div class="text-[11px] text-slate-500 mt-1">Questions Taken</div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3">
+        <button id="cancelModalBtn" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">
+          Continue Quiz
+        </button>
+        <button id="confirmSaveScoreBtn" class="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-sm">
+          Save Score & Start Fresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const QUIZ_DATA = [
+      // Part 1: North America, Equator, and Prime Meridian (1 - 25)
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Which continent is located entirely in the Northern Hemisphere and primarily in the Western Hemisphere?",
+        options: ["Africa", "Antarctica", "North America", "Australia"],
+        correct: 2,
+        rationale: "North America lies completely north of the Equator and west of the Prime Meridian."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "What imaginary line runs horizontally around the middle of the Earth at 0° latitude?",
+        options: ["The Prime Meridian", "The Equator", "The Tropic of Cancer", "The International Date Line"],
+        correct: 1,
+        rationale: "The Equator is the zero-degree latitude line dividing Earth into Northern and Southern Hemispheres."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "What imaginary line runs vertically from the North Pole to the South Pole at 0° longitude?",
+        options: ["The Equator", "The Prime Meridian", "The Arctic Circle", "The Tropic of Capricorn"],
+        correct: 1,
+        rationale: "The Prime Meridian serves as the 0° longitude reference line dividing Eastern and Western Hemispheres."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "In which two hemispheres is North America fully or partially located?",
+        options: ["Northern and Western", "Southern and Eastern", "Northern and Eastern", "Southern and Western"],
+        correct: 0,
+        rationale: "North America sits above the Equator (Northern) and to the left of the Prime Meridian (Western)."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Which major body of water borders North America to the east?",
+        options: ["The Pacific Ocean", "The Indian Ocean", "The Atlantic Ocean", "The Arctic Ocean"],
+        correct: 2,
+        rationale: "The Atlantic Ocean lies between eastern North America and western Europe/Africa."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Which major ocean borders western North America?",
+        options: ["The Atlantic Ocean", "The Pacific Ocean", "The Arctic Ocean", "The Southern Ocean"],
+        correct: 1,
+        rationale: "The Pacific Ocean stretches along the western coast of the North American continent."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Which ocean borders the northern coast of North America?",
+        options: ["The Indian Ocean", "The Arctic Ocean", "The Atlantic Ocean", "The Southern Ocean"],
+        correct: 1,
+        rationale: "The Arctic Ocean is located at the northern polar region above North America, Europe, and Asia."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "What country shares the northern land border of the United States in North America?",
+        options: ["Mexico", "Canada", "Brazil", "Guatemala"],
+        correct: 1,
+        rationale: "Canada forms the entire northern land boundary of the United States."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "What country shares the southern land border of the United States in North America?",
+        options: ["Canada", "Mexico", "Cuba", "Panama"],
+        correct: 1,
+        rationale: "Mexico lies directly south of the United States border."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Which hemisphere contains almost all of North America's land area?",
+        options: ["Eastern Hemisphere", "Southern Hemisphere", "Western Hemisphere", "Antarctic Hemisphere"],
+        correct: 2,
+        rationale: "Because North America is west of the Prime Meridian, it is in the Western Hemisphere."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "When looking at a standard world map, which direction from South America is North America?",
+        options: ["South", "East", "North", "West"],
+        correct: 2,
+        rationale: "North America is positioned directly above (north of) South America."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "The Equator passes through which of the following continents, unlike North America?",
+        options: ["Europe", "South America", "Antarctica", "North America"],
+        correct: 1,
+        rationale: "The Equator cuts through northern South America, whereas North America is entirely north of it."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Lines of latitude run parallel to which major geographic reference line?",
+        options: ["The Prime Meridian", "The Equator", "The International Date Line", "The Greenwich Meridian"],
+        correct: 1,
+        rationale: "Latitude lines measure distance north or south of the Equator."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Lines of longitude meet and converge at which geographic points?",
+        options: ["The Equator", "The North and South Poles", "The Tropics", "The Prime Meridian"],
+        correct: 1,
+        rationale: "All lines of longitude (meridians) run from pole to pole."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Which of the following best describes North America's position relative to the Prime Meridian?",
+        options: ["Completely to the east", "Completely to the west", "Divided equally in half", "Directly on top of it"],
+        correct: 1,
+        rationale: "The Prime Meridian passes through Europe and Africa, placing all of North America to its west."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "How does the Equator help geographers understand climate?",
+        options: [
+          "It marks where oceans begin.",
+          "It identifies locations closest to the warmest part of Earth near the center.",
+          "It measures mountain heights.",
+          "It tracks wind speeds."
+        ],
+        correct: 1,
+        rationale: "Regions closest to the Equator receive direct sunlight year-round, creating warmer climates."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Which continent is connected to North America by a narrow land bridge in Central America?",
+        options: ["Europe", "Asia", "South America", "Africa"],
+        correct: 2,
+        rationale: "Central America physically connects North America and South America."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "What is the approximate latitudinal position of the Equator?",
+        options: ["90° North", "0°", "180° East", "45° South"],
+        correct: 1,
+        rationale: "The Equator is defined as 0° latitude."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "What is the approximate longitudinal position of the Prime Meridian?",
+        options: ["0°", "90° West", "180°", "360° North"],
+        correct: 0,
+        rationale: "The Prime Meridian is defined as 0° longitude."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Which of the following is true about North America's size among the world's continents?",
+        options: [
+          "It is the smallest continent.",
+          "It is the third-largest continent by land area.",
+          "It is larger than Asia.",
+          "It is smaller than Europe."
+        ],
+        correct: 1,
+        rationale: "Asia is first, Africa is second, and North America is the third-largest continent."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "If you travel from the Equator toward northern Canada, what direction are you moving?",
+        options: ["South", "North", "East", "West"],
+        correct: 1,
+        rationale: "Moving upward on a map away from the Equator toward the North Pole is heading north."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "If you travel from eastern North America across the Atlantic toward Europe, what direction are you heading?",
+        options: ["West", "South", "East", "North"],
+        correct: 2,
+        rationale: "Moving toward Europe from the U.S. across the Atlantic requires heading east."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Which hemisphere is NOT touched by any part of the North American mainland?",
+        options: ["Northern Hemisphere", "Western Hemisphere", "Eastern Hemisphere", "Both Northern and Western"],
+        correct: 2,
+        rationale: "North America is entirely in the Northern and Western hemispheres, meaning it has no land in the Eastern Hemisphere."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "What type of map feature is the Equator?",
+        options: ["A human-made highway", "An imaginary reference line", "A physical mountain range", "A major river"],
+        correct: 1,
+        rationale: "The Equator is an imaginary line created by geographers to measure latitude."
+      },
+      {
+        part: 1,
+        partName: "Part 1: North America, Equator, and Prime Meridian",
+        q: "Why is the Prime Meridian important for global navigation and time?",
+        options: [
+          "It shows where oceans meet land.",
+          "It serves as the starting point (0°) for measuring longitude and time zones.",
+          "It determines local weather patterns.",
+          "It measures soil depth."
+        ],
+        correct: 1,
+        rationale: "The Prime Meridian splits East from West and acts as the baseline for global timekeeping."
+      },
+
+      // Part 2: New England Region (26 - 50)
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "In which geographic corner of the United States is the New England region located?",
+        options: ["Northwest", "Southwest", "Southeast", "Northeast"],
+        correct: 3,
+        rationale: "New England sits in the upper-right (northeast) corner of the United States."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "How many states make up the New England region?",
+        options: ["3", "5", "6", "8"],
+        correct: 2,
+        rationale: "New England consists of six states: Maine, New Hampshire, Vermont, Massachusetts, Rhode Island, and Connecticut."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which of the following states is part of New England?",
+        options: ["New York", "Pennsylvania", "Vermont", "New Jersey"],
+        correct: 2,
+        rationale: "Vermont is one of the six New England states; New York and New Jersey are Mid-Atlantic."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which of the following states is NOT part of New England?",
+        options: ["Maine", "Massachusetts", "Rhode Island", "Maryland"],
+        correct: 3,
+        rationale: "Maryland is located further south in the Mid-Atlantic region."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "What type of physical landscape is prominent across much of New England?",
+        options: [
+          "Flat desert basins",
+          "Rolling hills, mountains, forests, and lakes",
+          "Broad tropical swamps",
+          "Dry arid grasslands"
+        ],
+        correct: 1,
+        rationale: "New England is known for its rugged terrain, dense forests, hills, and glacial lakes."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "How many distinct weather seasons does New England typically experience?",
+        options: ["Two", "Three", "Four distinct seasons", "One constant season"],
+        correct: 2,
+        rationale: "New England experiences four pronounced seasons: spring, summer, autumn, and winter."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Historically, which industries have been vital to the coastal areas of New England?",
+        options: [
+          "Cotton farming and rice cultivation",
+          "Shipbuilding, fishing, and maritime trade",
+          "Large-scale oil drilling and cattle ranching",
+          "Tropical fruit harvesting"
+        ],
+        correct: 1,
+        rationale: "Due to its long coastline and timber resources, New England became famous for fishing and shipbuilding."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which ocean borders the eastern coast of the New England region?",
+        options: ["Pacific Ocean", "Indian Ocean", "Atlantic Ocean", "Arctic Ocean"],
+        correct: 2,
+        rationale: "The Atlantic Ocean washes against the entire eastern shore of New England."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "What natural resource from New England's dense forests supported its early colonial and industrial economies?",
+        options: ["Rubber", "Timber (wood)", "Citrus trees", "Bamboo"],
+        correct: 1,
+        rationale: "Forests provided abundant timber for building homes, ships, and furniture."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which New England state has the longest coastline along the Atlantic Ocean and is famous for lobsters and rocky shores?",
+        options: ["Vermont", "Maine", "Connecticut", "Massachusetts"],
+        correct: 1,
+        rationale: "Maine is the northernmost New England state, renowned for its jagged rocky coastline and fisheries."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which New England state is completely landlocked (does not touch the Atlantic Ocean)?",
+        options: ["Rhode Island", "New Hampshire", "Vermont", "Massachusetts"],
+        correct: 2,
+        rationale: "Vermont is the only New England state with no ocean coastline."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "What major historical role did New England play in American history?",
+        options: [
+          "It was the center of the Spanish missions.",
+          "It was a primary site for early English colonization and the American Revolution.",
+          "It was the starting point of the California Gold Rush.",
+          "It was where the Louisiana Purchase was signed."
+        ],
+        correct: 1,
+        rationale: "New England holds deep historical roots in early American settlement and Revolutionary War events."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which New England state is the smallest in total land area?",
+        options: ["Maine", "Massachusetts", "Rhode Island", "Connecticut"],
+        correct: 2,
+        rationale: "Rhode Island is geographically the smallest state in the U.S."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "What educational significance is historically associated with New England?",
+        options: [
+          "It was home to the nation's earliest colleges and universities.",
+          "It banned all public schooling.",
+          "It focused exclusively on agricultural training schools.",
+          "It had no formal education systems until the 20th century."
+        ],
+        correct: 0,
+        rationale: "New England established some of the earliest formal schools and universities in North America, like Harvard."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "How do New England's winters generally compare to southern U.S. regions?",
+        options: [
+          "They are much warmer and shorter.",
+          "They are colder with heavier snowfall.",
+          "They have zero freezing temperatures.",
+          "They feature tropical rainstorms."
+        ],
+        correct: 1,
+        rationale: "Northern latitude and coastal storms give New England cold, snowy winters."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which physical feature was carved out by ancient glaciers across New England?",
+        options: [
+          "Extensive sand dunes",
+          "Numerous freshwater lakes and ponds",
+          "Deep volcanic craters",
+          "Flat desert salt flats"
+        ],
+        correct: 1,
+        rationale: "Glacial activity left behind thousands of scenic lakes and rocky soil across New England."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "What economic sector became prominent in New England alongside manufacturing and fishing?",
+        options: [
+          "Cotton plantations",
+          "Tourism, higher education, and technology",
+          "Tropical fruit production",
+          "Gold mining"
+        ],
+        correct: 1,
+        rationale: "Modern New England relies heavily on education, technology, tourism, and healthcare."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which mountain range extends into the northern part of the New England region?",
+        options: ["The Rocky Mountains", "The Appalachian Mountains", "The Sierra Nevada", "The Cascade Range"],
+        correct: 1,
+        rationale: "The Appalachian chain runs through eastern North America, including New England's mountains."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Boston is the capital and largest city of which New England state?",
+        options: ["Connecticut", "Massachusetts", "Rhode Island", "Maine"],
+        correct: 1,
+        rationale: "Boston is the historic capital of Massachusetts."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which river forms part of the border between New Hampshire and Vermont before flowing through Massachusetts and Connecticut into the Atlantic?",
+        options: ["The Mississippi River", "The Connecticut River", "The Rio Grande", "The Columbia River"],
+        correct: 1,
+        rationale: "The Connecticut River is the longest river in the New England region."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "What type of climate classification does New England primarily experience?",
+        options: ["Tropical rainforest", "Humid continental", "Arid desert", "Mediterranean"],
+        correct: 1,
+        rationale: "New England features warm summers and cold, snowy winters characteristic of a humid continental climate."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Why was manufacturing able to grow rapidly in 19th-century New England?",
+        options: [
+          "Fast-flowing rivers provided water power for textile mills and factories.",
+          "Massive oil fields were discovered underground.",
+          "Flat desert terrain made road building easy.",
+          "Tropical heat fueled steam engines."
+        ],
+        correct: 0,
+        rationale: "New England's swift rivers powered early American industrial mills."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which New England state is known as the \"Bay State\"?",
+        options: ["Rhode Island", "Massachusetts", "Connecticut", "New Hampshire"],
+        correct: 1,
+        rationale: "Massachusetts is officially nicknamed the Bay State."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "Which New England state is nicknamed the \"Green Mountain State\"?",
+        options: ["Vermont", "Maine", "Connecticut", "Rhode Island"],
+        correct: 0,
+        rationale: "Vermont gets its name from the French words for green mountain."
+      },
+      {
+        part: 2,
+        partName: "Part 2: New England Region",
+        q: "What major crop or agricultural product is southern New England famous for harvesting in autumn?",
+        options: ["Oranges", "Apples and maple syrup", "Cotton", "Rice"],
+        correct: 1,
+        rationale: "New England orchards produce abundant apples, and its maples produce syrup."
+      },
+
+      // Part 3: Mid-Atlantic Region (51 - 75)
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which U.S. region lies directly south of New England along the Atlantic coast?",
+        options: ["The Midwest", "The Mid-Atlantic", "The Great Plains", "The Southwest"],
+        correct: 1,
+        rationale: "The Mid-Atlantic region sits immediately south and west of New England."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which important federal district and national capital city is located within the Mid-Atlantic region?",
+        options: ["New York City, NY", "Philadelphia, PA", "Washington, D.C.", "Boston, MA"],
+        correct: 2,
+        rationale: "Washington, D.C., the capital of the United States, is situated in the Mid-Atlantic."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which of the following states is part of the Mid-Atlantic region?",
+        options: ["Texas", "Florida", "New York", "Oregon"],
+        correct: 2,
+        rationale: "New York is a core Mid-Atlantic state."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which of the following states is NOT in the Mid-Atlantic region?",
+        options: ["Pennsylvania", "New Jersey", "Maryland", "California"],
+        correct: 3,
+        rationale: "California is on the West Coast."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "What demographic characteristic is prominent in the Mid-Atlantic region?",
+        options: [
+          "It contains densely populated metropolitan areas and large cities.",
+          "It is mostly uninhabited wilderness.",
+          "It consists entirely of rural farming towns.",
+          "It has the lowest population density in the U.S."
+        ],
+        correct: 0,
+        rationale: "The Mid-Atlantic is home to major urban corridors and dense populations."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Major economic activities in the Mid-Atlantic include government, finance, healthcare, and which of the following?",
+        options: [
+          "Tropical banana farming",
+          "Technology, commerce, and transportation",
+          "Massive gold extraction",
+          "Commercial whaling"
+        ],
+        correct: 1,
+        rationale: "Banking, government administration, healthcare, and commerce drive the Mid-Atlantic economy."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which iconic American harbor in the Mid-Atlantic region welcomed millions of immigrants arriving by ship?",
+        options: ["San Francisco Bay", "New York Harbor (Statue of Liberty)", "Boston Harbor", "Galveston Bay"],
+        correct: 1,
+        rationale: "New York Harbor and the Statue of Liberty served as the gateway for immigrants arriving in the East."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "What physical feature separates parts of the Mid-Atlantic region from the interior states to the west?",
+        options: ["The Rocky Mountains", "The Appalachian Mountains", "The Mississippi River", "The Grand Canyon"],
+        correct: 1,
+        rationale: "The Appalachian Mountains cross through the western portions of Mid-Atlantic states like Pennsylvania and New York."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which Mid-Atlantic city served as the meeting place where the Declaration of Independence and the U.S. Constitution were signed?",
+        options: ["Washington, D.C.", "Philadelphia", "Baltimore", "Newark"],
+        correct: 1,
+        rationale: "Philadelphia, Pennsylvania, hosted the drafting of foundational American documents."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "What body of water forms the eastern border for Mid-Atlantic states like New Jersey, Delaware, and Maryland?",
+        options: ["The Pacific Ocean", "The Atlantic Ocean", "The Gulf of Mexico", "Lake Superior"],
+        correct: 1,
+        rationale: "The Atlantic Ocean borders the eastern coastline of the Mid-Atlantic."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which massive estuary located within the Mid-Atlantic region is the largest in the United States?",
+        options: ["Puget Sound", "Chesapeake Bay", "San Francisco Bay", "Tampa Bay"],
+        correct: 1,
+        rationale: "Chesapeake Bay is a major Mid-Atlantic estuary rich in seafood and history."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "What type of climate does the Mid-Atlantic region generally experience compared to northern New England?",
+        options: [
+          "Slightly milder winters and warmer summers",
+          "Arctic tundra conditions",
+          "Year-round tropical heat",
+          "Permanent desert drought"
+        ],
+        correct: 0,
+        rationale: "Being slightly further south, the Mid-Atlantic has somewhat warmer summers and milder winters than northern New England."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which Mid-Atlantic state is known as the Empire State and contains the nation's most populous city?",
+        options: ["Pennsylvania", "New Jersey", "New York", "Delaware"],
+        correct: 2,
+        rationale: "New York is nicknamed the Empire State."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "What role does Washington, D.C. play as part of the Mid-Atlantic region?",
+        options: [
+          "It is the center of the U.S. federal government.",
+          "It is the nation's primary oil-drilling hub.",
+          "It is the largest manufacturing center for automobiles.",
+          "It is the main seaport for Pacific trade."
+        ],
+        correct: 0,
+        rationale: "Washington, D.C. houses the White House, Congress, and Supreme Court."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which river flows past Washington, D.C., emptying into the Chesapeake Bay?",
+        options: ["The Mississippi River", "The Potomac River", "The Hudson River", "The Rio Grande"],
+        correct: 1,
+        rationale: "The Potomac River runs alongside the nation's capital."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which Mid-Atlantic river flows past New York City and separates New York from New Jersey?",
+        options: ["The Hudson River", "The Delaware River", "The Susquehanna River", "The Ohio River"],
+        correct: 0,
+        rationale: "The Hudson River is a major Mid-Atlantic waterway next to Manhattan."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which of the following industries is historically significant to Pennsylvania within the Mid-Atlantic region?",
+        options: [
+          "Steel manufacturing and coal mining",
+          "Tropical spice harvesting",
+          "Commercial salmon fishing",
+          "Rubber tree tapping"
+        ],
+        correct: 0,
+        rationale: "Pennsylvania's rich mineral resources made it a powerhouse for coal and steel."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Why is transportation and infrastructure highly developed in the Mid-Atlantic?",
+        options: [
+          "To connect its sprawling cities, ports, and government centers.",
+          "Because rugged mountains prevent walking.",
+          "To transport arctic ice south.",
+          "Because there are no rivers."
+        ],
+        correct: 0,
+        rationale: "Dense urban populations require advanced highway, rail, and air networks."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which Mid-Atlantic state has a capital named Trenton and lies directly between New York City and Philadelphia?",
+        options: ["Maryland", "New Jersey", "Delaware", "Virginia"],
+        correct: 1,
+        rationale: "New Jersey bridges the New York and Philadelphia metropolitan areas."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which state is the smallest in land area within the Mid-Atlantic group?",
+        options: ["New York", "Pennsylvania", "Delaware", "Maryland"],
+        correct: 2,
+        rationale: "Delaware is one of the smallest states in the nation by area."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "What cultural impact has the Mid-Atlantic region had on the United States?",
+        options: [
+          "It is a melting pot of diverse cultures, media, finance, and diplomacy.",
+          "It has remained culturally isolated from the rest of the world.",
+          "Its culture is exclusively agricultural.",
+          "It shares no traditions with other states."
+        ],
+        correct: 0,
+        rationale: "As a financial and political hub, the Mid-Atlantic heavily influences American culture and global affairs."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which mountain ridge system runs through western Maryland, Pennsylvania, and New York?",
+        options: ["The Rocky Mountains", "The Appalachian Mountains", "The Alaska Range", "The Ozark Plateau"],
+        correct: 1,
+        rationale: "The Appalachians traverse the western landscape of these Mid-Atlantic states."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "What bay shared by Maryland and Virginia is famous for blue crabs and oysters?",
+        options: ["Chesapeake Bay", "Delaware Bay", "Narragansett Bay", "Mobile Bay"],
+        correct: 0,
+        rationale: "Chesapeake Bay supports a thriving fishing and crabbing industry."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "Which major U.S. financial street is located in New York City within the Mid-Atlantic region?",
+        options: ["Pennsylvania Avenue", "Wall Street", "Constitution Avenue", "Broadway"],
+        correct: 1,
+        rationale: "Wall Street in Manhattan is the heart of American finance."
+      },
+      {
+        part: 3,
+        partName: "Part 3: Mid-Atlantic Region",
+        q: "How does the Mid-Atlantic region's population density compare to rural western states?",
+        options: [
+          "It is much higher, with crowded cities and suburbs.",
+          "It is identical.",
+          "It is much lower.",
+          "It has zero permanent residents."
+        ],
+        correct: 0,
+        rationale: "The Mid-Atlantic is part of the densely populated northeastern urban corridor."
+      },
+
+      // Part 4: Southern Region (76 - 100)
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "In which general direction of the United States is the Southern region located?",
+        options: [
+          "Far north near Canada",
+          "The southeast and south-central areas bordering the Gulf of Mexico",
+          "The Pacific Northwest coast",
+          "The Rocky Mountain peaks"
+        ],
+        correct: 1,
+        rationale: "The South spans the lower eastern and central United States, stretching to the Gulf of Mexico."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which body of water forms the southern and southeastern boundary for many states in the Southern region?",
+        options: [
+          "The Arctic Ocean",
+          "The Gulf of Mexico and the Atlantic Ocean",
+          "Hudson Bay",
+          "Lake Superior"
+        ],
+        correct: 1,
+        rationale: "The South is bounded by warm coastal waters of the Gulf of Mexico and the Atlantic Ocean."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "What type of climate characterizes most of the Southern region?",
+        options: [
+          "Bitter arctic cold year-round",
+          "Warm, humid climate with long summers and mild winters",
+          "Dry, freezing alpine tundra",
+          "Arid desert with zero rainfall"
+        ],
+        correct: 1,
+        rationale: "The South is widely known for its warm weather and humid summers."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which of the following states is part of the Southern region?",
+        options: ["Washington", "Louisiana", "Maine", "North Dakota"],
+        correct: 1,
+        rationale: "Louisiana is a core Southern state along the Gulf Coast."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which of the following states is NOT in the Southern region?",
+        options: ["Georgia", "Mississippi", "Alabama", "Vermont"],
+        correct: 3,
+        rationale: "Vermont is in New England."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Historically, what major agricultural products were grown on large plantations in the South?",
+        options: [
+          "Wheat and barley",
+          "Cotton, tobacco, and rice",
+          "Potatoes and sugar beets",
+          "Apples and maple syrup"
+        ],
+        correct: 1,
+        rationale: "The South's warm climate and fertile soil made it ideal for cash crops like cotton and tobacco."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "What major economic activities drive the modern South?",
+        options: [
+          "Shipping, tourism, agriculture, energy production, and manufacturing",
+          "Only Arctic ice harvesting",
+          "Gold mining exclusively",
+          "Salmon canning"
+        ],
+        correct: 0,
+        rationale: "Modern Southern economies thrive on diverse industries, ports, tourism, and energy."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which major U.S. river empties into the Gulf of Mexico through Louisiana in the South?",
+        options: ["The Columbia River", "The Mississippi River", "The Hudson River", "The Connecticut River"],
+        correct: 1,
+        rationale: "The Mississippi River drains the interior of the U.S. and flows out through Louisiana into the Gulf."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "What cultural and historical richness defines the Southern region?",
+        options: [
+          "Deep roots in music (jazz, blues, country), literature, and diverse heritage",
+          "Complete absence of historical landmarks",
+          "Culture entirely imported from Europe last year",
+          "No traditional food or music"
+        ],
+        correct: 0,
+        rationale: "The South is famous worldwide for inventing jazz, blues, country music, and distinct culinary traditions."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which Southern state is uniquely shaped like a boot jutting into the Gulf of Mexico and features rich delta wetlands?",
+        options: ["Florida", "Louisiana", "Texas", "North Carolina"],
+        correct: 1,
+        rationale: "Louisiana is shaped distinctively and features the Mississippi River delta."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "What role do ports play in the Southern region's economy?",
+        options: [
+          "They facilitate busy shipping and international trade with Central and South America.",
+          "They are used exclusively for ice skating.",
+          "They are closed to all boats.",
+          "They only handle land vehicles."
+        ],
+        correct: 0,
+        rationale: "Southern coastal ports serve as major gateways for global shipping and cargo."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which Southern state is a long peninsula bordered by the Atlantic Ocean on one side and the Gulf of Mexico on the other?",
+        options: ["Georgia", "Florida", "South Carolina", "Alabama"],
+        correct: 1,
+        rationale: "Florida forms a prominent tropical peninsula in the southeastern U.S."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "How do winters in the South generally compare to winters in New England?",
+        options: [
+          "They are much milder and rarely feature heavy snow.",
+          "They are twice as cold and snowy.",
+          "They feature permanent glaciers.",
+          "They are identical in temperature."
+        ],
+        correct: 0,
+        rationale: "The South experiences mild winters without the harsh freezing conditions of the Northeast."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which natural disaster can occasionally impact coastal areas of the Southern region during summer and autumn?",
+        options: ["Major blizzards", "Hurricanes and tropical storms", "Massive earthquakes", "Volcanic eruptions"],
+        correct: 1,
+        rationale: "Warm ocean waters in the Atlantic and Gulf of Mexico bring seasonal hurricanes to the South."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "What feature is characteristic of Louisiana's geography in the Southern region?",
+        options: [
+          "Vast expanses of flat desert sand",
+          "Extensive bayous, swamps, and river deltas",
+          "Rocky alpine mountain peaks",
+          "Glacial fjords"
+        ],
+        correct: 1,
+        rationale: "Louisiana is famous for its unique bayous, wetlands, and delta geography."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which crop historically earned the title \"King\" in the economy of the antebellum South?",
+        options: ["Corn", "Cotton", "Wheat", "Soybeans"],
+        correct: 1,
+        rationale: "Cotton was the dominant agricultural export and economic driver in the historical South."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "What energy resource is produced in abundance in Southern states like Texas and Louisiana?",
+        options: ["Geothermal steam", "Petroleum (oil) and natural gas", "Tidal wave power", "Glacier meltwater"],
+        correct: 1,
+        rationale: "The Gulf Coast region is a major hub for oil and natural gas production."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which Southern state is the second-largest in the United States by land area?",
+        options: ["Florida", "Texas", "Georgia", "Mississippi"],
+        correct: 1,
+        rationale: "Texas is massive, second only to Alaska in total area."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "What type of forests cover large portions of the southern coastal plain?",
+        options: ["Pine forests and mixed woodlands", "Arctic pine taiga", "Bamboo rainforests", "Redwood groves"],
+        correct: 0,
+        rationale: "Southern states feature extensive pine flatwoods and hardwood forests."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Why are tourism and hospitality major industries in states like Florida and Louisiana?",
+        options: [
+          "Because of warm weather, historic cities, beaches, and cultural festivals.",
+          "Because people travel there to see snow glaciers.",
+          "Because there are no cities to visit.",
+          "Because winter sports are the main attraction."
+        ],
+        correct: 0,
+        rationale: "Warm climates, theme parks, Mardi Gras, beaches, and historic sites draw millions of visitors."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which mountain range reaches its southern terminus in northern Georgia and Alabama?",
+        options: ["The Rocky Mountains", "The Appalachian Mountains", "The Sierra Nevada", "The Alaska Range"],
+        correct: 1,
+        rationale: "The southern end of the Appalachian mountain chain stretches into the northern parts of Southern states."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "What impact does the Gulf of Mexico have on the climate of the South?",
+        options: [
+          "It brings moisture, humidity, and warm air currents.",
+          "It creates an arctic freezing zone.",
+          "It causes complete year-round drought.",
+          "It prevents any rainfall from occurring."
+        ],
+        correct: 0,
+        rationale: "Evaporation from the warm Gulf waters feeds humidity and rainfall across the region."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "Which Southern city is world-famous as the birthplace of jazz music and home to the French Quarter?",
+        options: ["Atlanta, GA", "New Orleans, LA", "Houston, TX", "Miami, FL"],
+        correct: 1,
+        rationale: "New Orleans, Louisiana, is celebrated globally for jazz, cuisine, and architecture."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "How does the growing season in the South compare to northern states?",
+        options: [
+          "It is much longer, allowing crops to grow for a greater portion of the year.",
+          "It lasts only one month.",
+          "It is nonexistent.",
+          "It is restricted to indoor greenhouses only."
+        ],
+        correct: 0,
+        rationale: "Milder winters provide the South with a long, productive agricultural growing season."
+      },
+      {
+        part: 4,
+        partName: "Part 4: Southern Region",
+        q: "What is a primary geographic connection between the Southern region and international trade?",
+        options: [
+          "Direct access to the Gulf of Mexico and Caribbean shipping lanes.",
+          "Land borders connected directly to Europe.",
+          "Mountain tunnels leading to Asia.",
+          "Arctic shipping lanes."
+        ],
+        correct: 0,
+        rationale: "The South's warm water ports open directly into the Gulf of Mexico and the wider Atlantic/Caribbean trade routes."
+      }
+    ];
+
+    const PARTS = [
+      { id: 1, title: "Part 1: North America, Equator & Prime Meridian", range: [0, 24] },
+      { id: 2, title: "Part 2: New England Region", range: [25, 49] },
+      { id: 3, title: "Part 3: Mid-Atlantic Region", range: [50, 74] },
+      { id: 4, title: "Part 4: Southern Region", range: [75, 99] }
+    ];
+
+    const STORAGE_KEY_STATE = "na_regions_quiz_active_state_v1";
+    const STORAGE_KEY_HISTORY = "na_regions_quiz_score_history_v1";
+
+    function generateShuffledOrder() {
+      const order = Array.from({ length: QUIZ_DATA.length }, (_, i) => i);
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      return order;
+    }
+
+    let state = {
+      currentIndex: 0,
+      answers: {}, // { displayQuestionIndex: selectedOptionIndex }
+      questionOrder: generateShuffledOrder(), // Maps display position (0..99) -> QUIZ_DATA index
+      activeView: "quiz" // "quiz" (standalone page) or "dashboard"
+    };
+
+    let scoreHistory = [];
+    let pendingConfirmAction = null;
+
+    function getQuestionAt(displayIdx) {
+      const dataIdx = (state.questionOrder && state.questionOrder[displayIdx] !== undefined)
+        ? state.questionOrder[displayIdx]
+        : displayIdx;
+      return QUIZ_DATA[dataIdx];
+    }
+
+    // Load from localStorage
+    function loadPersistedData() {
+      try {
+        const savedState = localStorage.getItem(STORAGE_KEY_STATE);
+        if (savedState) {
+          const parsed = JSON.parse(savedState);
+          if (parsed && typeof parsed.currentIndex === "number" && parsed.answers) {
+            const validOrder = Array.isArray(parsed.questionOrder) && parsed.questionOrder.length === QUIZ_DATA.length
+              ? parsed.questionOrder
+              : generateShuffledOrder();
+            state = {
+              currentIndex: parsed.currentIndex,
+              answers: parsed.answers,
+              questionOrder: validOrder,
+              activeView: parsed.activeView || "quiz"
+            };
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load active quiz state:", e);
+      }
+
+      try {
+        const savedHistory = localStorage.getItem(STORAGE_KEY_HISTORY);
+        if (savedHistory) {
+          const parsedHistory = JSON.parse(savedHistory);
+          if (Array.isArray(parsedHistory)) {
+            scoreHistory = parsedHistory;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load score history:", e);
+      }
+    }
+
+    function saveActiveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY_STATE, JSON.stringify(state));
+      } catch (e) {
+        console.error("Failed to save state:", e);
+      }
+    }
+
+    function saveHistoryState() {
+      try {
+        localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(scoreHistory));
+      } catch (e) {
+        console.error("Failed to save score history:", e);
+      }
+    }
+
+    function calculateCurrentMetrics() {
+      const totalQuestions = QUIZ_DATA.length;
+      const answeredIndices = Object.keys(state.answers).map(Number);
+      const takenCount = answeredIndices.length;
+      let correctCount = 0;
+
+      answeredIndices.forEach(idx => {
+        const qItem = getQuestionAt(idx);
+        if (qItem && state.answers[idx] === qItem.correct) {
+          correctCount++;
+        }
+      });
+
+      const percent = takenCount > 0 ? Math.round((correctCount / takenCount) * 100) : 0;
+      return {
+        totalQuestions,
+        takenCount,
+        correctCount,
+        percent
+      };
+    }
+
+    function setView(viewName) {
+      state.activeView = viewName;
+      saveActiveState();
+      renderAll();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderViewVisibility() {
+      const dashboardView = document.getElementById("dashboardView");
+      const quizStandaloneView = document.getElementById("quizStandaloneView");
+      const switchViewText = document.getElementById("switchViewText");
+      const metrics = calculateCurrentMetrics();
+
+      if (state.activeView === "quiz") {
+        dashboardView.classList.add("hidden");
+        quizStandaloneView.classList.remove("hidden");
+        switchViewText.textContent = "Dashboard";
+      } else {
+        quizStandaloneView.classList.add("hidden");
+        dashboardView.classList.remove("hidden");
+        switchViewText.textContent = metrics.takenCount > 0 ? "Resume Quiz" : "Start Quiz";
+      }
+
+      const startOrResumeText = document.getElementById("startOrResumeText");
+      if (startOrResumeText) {
+        startOrResumeText.textContent = metrics.takenCount > 0
+          ? `Resume Quiz (Q${state.currentIndex + 1})`
+          : "Start Standalone Quiz";
+      }
+
+      const resetBtn = document.getElementById("resetAttemptBtn");
+      if (resetBtn) {
+        if (metrics.takenCount > 0) {
+          resetBtn.classList.remove("hidden");
+        } else {
+          resetBtn.classList.add("hidden");
+        }
+      }
+    }
+
+    function renderSidebar() {
+      const metrics = calculateCurrentMetrics();
+
+      // Update standalone & dashboard stats
+      document.getElementById("statAnswered").textContent = `${metrics.takenCount}/${metrics.totalQuestions}`;
+      document.getElementById("statCorrect").textContent = `${metrics.correctCount}`;
+      document.getElementById("statPercent").textContent = `${metrics.percent}%`;
+      document.getElementById("progressBar").style.width = `${(metrics.takenCount / metrics.totalQuestions) * 100}%`;
+
+      document.getElementById("dashStatAnswered").textContent = `${metrics.takenCount}/${metrics.totalQuestions}`;
+      document.getElementById("dashStatCorrect").textContent = `${metrics.correctCount}`;
+      document.getElementById("dashStatPercent").textContent = `${metrics.percent}%`;
+
+      document.getElementById("headerAnsweredCount").textContent = metrics.takenCount;
+      document.getElementById("headerAccuracy").textContent = `${metrics.percent}%`;
+
+      const submitEarlyBtn = document.getElementById("submitEarlyBtn");
+      submitEarlyBtn.disabled = metrics.takenCount === 0;
+      submitEarlyBtn.textContent = metrics.takenCount === metrics.totalQuestions ? "Record Score" : "Finish & Record";
+
+      // Render Part filter buttons (tracks how many questions from each Part are answered in the randomized order)
+      const partContainer = document.getElementById("partButtonsContainer");
+      partContainer.innerHTML = "";
+      const currentPart = getQuestionAt(state.currentIndex).part;
+
+      PARTS.forEach(part => {
+        let partAnswered = 0;
+        let firstUnansweredInPart = -1;
+        let firstInPart = -1;
+
+        for (let i = 0; i < QUIZ_DATA.length; i++) {
+          if (getQuestionAt(i).part === part.id) {
+            if (firstInPart === -1) firstInPart = i;
+            if (state.answers[i] !== undefined) {
+              partAnswered++;
+            } else if (firstUnansweredInPart === -1) {
+              firstUnansweredInPart = i;
+            }
+          }
+        }
+
+        const isCurrent = part.id === currentPart;
+        const btn = document.createElement("button");
+        btn.className = `w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center justify-between ${
+          isCurrent
+            ? "bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold"
+            : "text-slate-600 hover:bg-slate-100 border border-transparent"
+        }`;
+        btn.innerHTML = `
+          <span class="truncate pr-2">${part.title}</span>
+          <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${
+            partAnswered === 25 ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"
+          }">${partAnswered}/25</span>
+        `;
+        btn.addEventListener("click", () => {
+          const targetIdx = firstUnansweredInPart !== -1 ? firstUnansweredInPart : (firstInPart !== -1 ? firstInPart : 0);
+          state.currentIndex = targetIdx;
+          document.getElementById("navigatorDrawer").classList.add("hidden");
+          saveActiveState();
+          renderAll();
+        });
+        partContainer.appendChild(btn);
+      });
+
+      // Render 1-100 Question Map
+      const grid = document.getElementById("questionGrid");
+      grid.innerHTML = "";
+      for (let idx = 0; idx < QUIZ_DATA.length; idx++) {
+        const item = getQuestionAt(idx);
+        const btn = document.createElement("button");
+        const isCurrent = idx === state.currentIndex;
+        const userAns = state.answers[idx];
+        let colorClasses = "bg-slate-100 text-slate-700 hover:bg-slate-200";
+
+        if (userAns !== undefined) {
+          if (userAns === item.correct) {
+            colorClasses = "bg-emerald-500 text-white hover:bg-emerald-600";
+          } else {
+            colorClasses = "bg-rose-500 text-white hover:bg-rose-600";
+          }
+        }
+
+        const ringClasses = isCurrent ? "ring-2 ring-indigo-600 ring-offset-1 font-bold" : "";
+        btn.className = `h-7 rounded-md text-[11px] font-mono transition flex items-center justify-center ${colorClasses} ${ringClasses}`;
+        btn.textContent = idx + 1;
+        btn.addEventListener("click", () => {
+          state.currentIndex = idx;
+          document.getElementById("navigatorDrawer").classList.add("hidden");
+          saveActiveState();
+          renderAll();
+        });
+        grid.appendChild(btn);
+      }
+    }
+
+    function renderQuestion() {
+      const idx = state.currentIndex;
+      const item = getQuestionAt(idx);
+      const userAns = state.answers[idx];
+      const hasAnswered = userAns !== undefined;
+
+      document.getElementById("partBadge").textContent = `Part ${item.part}`;
+      document.getElementById("partTitle").textContent = item.partName.replace(`Part ${item.part}: `, "");
+      document.getElementById("questionCounterText").textContent = `${idx + 1} / ${QUIZ_DATA.length}`;
+      document.getElementById("questionText").textContent = `${idx + 1}. ${item.q}`;
+
+      const optionsContainer = document.getElementById("optionsContainer");
+      optionsContainer.innerHTML = "";
+      const letters = ["A", "B", "C", "D"];
+
+      item.options.forEach((optText, optIdx) => {
+        const btn = document.createElement("button");
+        btn.disabled = hasAnswered;
+
+        let baseStyle = "border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/40 text-slate-800";
+        let badgeStyle = "bg-slate-100 text-slate-700 border-slate-200";
+        let statusIcon = "";
+
+        if (hasAnswered) {
+          if (optIdx === item.correct) {
+            baseStyle = "border-emerald-500 bg-emerald-50/70 text-emerald-950 font-medium";
+            badgeStyle = "bg-emerald-600 text-white border-emerald-600";
+            statusIcon = `<span class="ml-auto text-[11px] font-semibold text-emerald-700 flex items-center gap-0.5 shrink-0">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <span class="hidden sm:inline">Correct</span>
+            </span>`;
+          } else if (optIdx === userAns && userAns !== item.correct) {
+            baseStyle = "border-rose-400 bg-rose-50/70 text-rose-950";
+            badgeStyle = "bg-rose-600 text-white border-rose-600";
+            statusIcon = `<span class="ml-auto text-[11px] font-semibold text-rose-700 flex items-center gap-0.5 shrink-0">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              <span class="hidden sm:inline">Your Answer</span>
+            </span>`;
+          } else {
+            baseStyle = "border-slate-200 bg-slate-50/60 text-slate-400 opacity-75";
+            badgeStyle = "bg-slate-100 text-slate-400 border-slate-200";
+          }
+        }
+
+        btn.className = `w-full text-left px-3 py-2 sm:p-3.5 rounded-xl border-2 transition flex items-center gap-2.5 sm:gap-3 ${baseStyle}`;
+        btn.innerHTML = `
+          <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg border text-xs sm:text-sm font-bold flex items-center justify-center shrink-0 ${badgeStyle}">
+            ${letters[optIdx]}
+          </span>
+          <span class="text-xs sm:text-base leading-snug">${optText}</span>
+          ${statusIcon}
+        `;
+
+        btn.addEventListener("click", () => selectOption(optIdx));
+        optionsContainer.appendChild(btn);
+      });
+
+      // Rationale display
+      const rationaleBox = document.getElementById("rationaleBox");
+      const rationaleHeader = document.getElementById("rationaleHeader");
+      const rationaleText = document.getElementById("rationaleText");
+
+      if (hasAnswered) {
+        const isCorrect = userAns === item.correct;
+        rationaleBox.className = `rounded-xl p-2.5 sm:p-3.5 border text-xs sm:text-sm leading-snug transition-all ${
+          isCorrect
+            ? "bg-emerald-50/70 border-emerald-200 text-emerald-950"
+            : "bg-amber-50/80 border-amber-200 text-amber-950"
+        }`;
+        rationaleHeader.innerHTML = isCorrect
+          ? `<span class="text-emerald-700">✓ Rationale</span>`
+          : `<span class="text-amber-800">Explanation (Answer: ${letters[item.correct]})</span>`;
+        rationaleText.textContent = item.rationale;
+      } else {
+        rationaleBox.className = "hidden";
+      }
+
+      // Navigation buttons
+      document.getElementById("prevBtn").disabled = idx === 0;
+      document.getElementById("nextBtn").disabled = idx === QUIZ_DATA.length - 1;
+    }
+
+    function renderHistory() {
+      const historyList = document.getElementById("historyList");
+      const badge = document.getElementById("historyCountBadge");
+      const clearBtn = document.getElementById("clearHistoryBtn");
+
+      badge.textContent = scoreHistory.length;
+
+      if (scoreHistory.length === 0) {
+        clearBtn.classList.add("hidden");
+        historyList.innerHTML = `
+          <div class="text-center py-6 border border-dashed border-slate-200 rounded-xl text-slate-400 text-xs sm:text-sm">
+            No completed or early-submitted attempts recorded yet.
+          </div>
+        `;
+        return;
+      }
+
+      clearBtn.classList.remove("hidden");
+      historyList.innerHTML = "";
+
+      scoreHistory.slice().reverse().forEach((entry, revIdx) => {
+        const attemptNumber = scoreHistory.length - revIdx;
+        const card = document.createElement("div");
+        card.className = "flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200";
+
+        const badgeColor = entry.percent >= 80
+          ? "bg-emerald-100 text-emerald-800 border-emerald-200"
+          : entry.percent >= 60
+          ? "bg-amber-100 text-amber-800 border-amber-200"
+          : "bg-rose-100 text-rose-800 border-rose-200";
+
+        card.innerHTML = `
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-600 shadow-2xs shrink-0">
+              #${attemptNumber}
+            </span>
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="font-bold text-slate-900 text-xs sm:text-sm">${entry.percent}% Score</span>
+                <span class="px-2 py-0.5 text-[10px] sm:text-xs font-mono font-semibold rounded-md bg-indigo-100 text-indigo-800 border border-indigo-200">
+                  ${entry.takenCount}/${entry.totalQuestions} Questions
+                </span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full border font-medium ${badgeColor}">
+                  ${entry.status}
+                </span>
+              </div>
+              <div class="text-[11px] text-slate-500 truncate mt-0.5">
+                <strong>${entry.correctCount}</strong>/${entry.takenCount} right • ${entry.timestamp}
+              </div>
+            </div>
+          </div>
+        `;
+        historyList.appendChild(card);
+      });
+    }
+
+    function selectOption(optIdx) {
+      const idx = state.currentIndex;
+      if (state.answers[idx] !== undefined) return;
+
+      state.answers[idx] = optIdx;
+      saveActiveState();
+      renderAll();
+
+      // Check if all 100 questions are now answered
+      const metrics = calculateCurrentMetrics();
+      if (metrics.takenCount === metrics.totalQuestions) {
+        openSubmitModal(true);
+      }
+    }
+
+    function openSubmitModal(isFullCompletion = false) {
+      const metrics = calculateCurrentMetrics();
+      if (metrics.takenCount === 0) return;
+
+      const modal = document.getElementById("submitModal");
+      const title = document.getElementById("modalTitle");
+      const desc = document.getElementById("modalDescription");
+
+      if (isFullCompletion) {
+        title.textContent = "Quiz Completed!";
+        desc.textContent = "You have answered all 100 questions. Save this result to your persistent score history.";
+      } else {
+        title.textContent = "Submit Early & Record Score?";
+        desc.textContent = `You have answered ${metrics.takenCount} out of ${metrics.totalQuestions} questions. Your percentage score is calculated strictly from the ${metrics.takenCount} questions taken, and will be recorded alongside "${metrics.takenCount}/${metrics.totalQuestions} Questions".`;
+      }
+
+      document.getElementById("modalScorePercent").textContent = `${metrics.percent}%`;
+      document.getElementById("modalCorrectBreakdown").textContent = `${metrics.correctCount} correct out of ${metrics.takenCount} answered`;
+      document.getElementById("modalTakenBadge").textContent = `${metrics.takenCount}/${metrics.totalQuestions} Questions`;
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeSubmitModal() {
+      const modal = document.getElementById("submitModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function recordScoreAndReset() {
+      const metrics = calculateCurrentMetrics();
+      if (metrics.takenCount === 0) return;
+
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      scoreHistory.push({
+        percent: metrics.percent,
+        correctCount: metrics.correctCount,
+        takenCount: metrics.takenCount,
+        totalQuestions: metrics.totalQuestions,
+        status: metrics.takenCount === metrics.totalQuestions ? "Completed" : "Submitted Early",
+        timestamp: formattedDate
+      });
+
+      saveHistoryState();
+
+      // Reset active attempt with a freshly randomized question order and switch to dashboard
+      state = {
+        currentIndex: 0,
+        answers: {},
+        questionOrder: generateShuffledOrder(),
+        activeView: "dashboard"
+      };
+      saveActiveState();
+      closeSubmitModal();
+      renderAll();
+
+      // Scroll smoothly to Score History
+      document.getElementById("scoreHistorySection").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function openConfirmModal(title, desc, onAccept) {
+      document.getElementById("confirmModalTitle").textContent = title;
+      document.getElementById("confirmModalDesc").textContent = desc;
+      pendingConfirmAction = onAccept;
+      const modal = document.getElementById("confirmModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeConfirmModal() {
+      const modal = document.getElementById("confirmModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      pendingConfirmAction = null;
+    }
+
+    function renderAll() {
+      renderViewVisibility();
+      renderSidebar();
+      renderQuestion();
+      renderHistory();
+    }
+
+    // Event Listeners
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (state.currentIndex > 0) {
+        state.currentIndex--;
+        saveActiveState();
+        renderAll();
+      }
+    });
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if (state.currentIndex < QUIZ_DATA.length - 1) {
+        state.currentIndex++;
+        saveActiveState();
+        renderAll();
+      }
+    });
+
+    document.getElementById("nextUnansweredBtn").addEventListener("click", () => {
+      for (let i = 1; i <= QUIZ_DATA.length; i++) {
+        const candidate = (state.currentIndex + i) % QUIZ_DATA.length;
+        if (state.answers[candidate] === undefined) {
+          state.currentIndex = candidate;
+          saveActiveState();
+          renderAll();
+          return;
+        }
+      }
+    });
+
+    document.getElementById("toggleNavigatorBtn").addEventListener("click", () => {
+      const drawer = document.getElementById("navigatorDrawer");
+      drawer.classList.toggle("hidden");
+    });
+
+    document.getElementById("closeNavigatorBtn").addEventListener("click", () => {
+      document.getElementById("navigatorDrawer").classList.add("hidden");
+    });
+
+    document.getElementById("switchViewBtn").addEventListener("click", () => {
+      setView(state.activeView === "quiz" ? "dashboard" : "quiz");
+    });
+
+    document.getElementById("startOrResumeQuizBtn").addEventListener("click", () => {
+      setView("quiz");
+    });
+
+    document.getElementById("backToDashboardBtn").addEventListener("click", () => {
+      setView("dashboard");
+    });
+
+    document.getElementById("submitEarlyBtn").addEventListener("click", () => {
+      const metrics = calculateCurrentMetrics();
+      openSubmitModal(metrics.takenCount === metrics.totalQuestions);
+    });
+
+    document.getElementById("cancelModalBtn").addEventListener("click", closeSubmitModal);
+    document.getElementById("confirmSaveScoreBtn").addEventListener("click", recordScoreAndReset);
+
+    document.getElementById("confirmModalCancel").addEventListener("click", closeConfirmModal);
+    document.getElementById("confirmModalAccept").addEventListener("click", () => {
+      if (typeof pendingConfirmAction === "function") {
+        pendingConfirmAction();
+      }
+      closeConfirmModal();
+    });
+
+    document.getElementById("resetAttemptBtn").addEventListener("click", () => {
+      if (Object.keys(state.answers).length === 0) return;
+      openConfirmModal(
+        "Reset Current Attempt?",
+        "Reset your current in-progress answers and reshuffle the quiz without recording a score?",
+        () => {
+          state.currentIndex = 0;
+          state.answers = {};
+          state.questionOrder = generateShuffledOrder();
+          saveActiveState();
+          renderAll();
+        }
+      );
+    });
+
+    document.getElementById("clearHistoryBtn").addEventListener("click", () => {
+      openConfirmModal(
+        "Clear Score History?",
+        "Are you sure you want to permanently delete all recorded score history?",
+        () => {
+          scoreHistory = [];
+          saveHistoryState();
+          renderHistory();
+        }
+      );
+    });
+
+    // Keyboard navigation (Left/Right arrows in standalone quiz view)
+    window.addEventListener("keydown", (e) => {
+      if (state.activeView !== "quiz") return;
+      if (!document.getElementById("submitModal").classList.contains("hidden")) return;
+      if (!document.getElementById("confirmModal").classList.contains("hidden")) return;
+      if (e.key === "ArrowRight" && state.currentIndex < QUIZ_DATA.length - 1) {
+        state.currentIndex++;
+        saveActiveState();
+        renderAll();
+      } else if (e.key === "ArrowLeft" && state.currentIndex > 0) {
+        state.currentIndex--;
+        saveActiveState();
+        renderAll();
+      }
+    });
+
+    // Initialize
+    loadPersistedData();
+    renderAll();
+  </script>
+</body>
+</html>
