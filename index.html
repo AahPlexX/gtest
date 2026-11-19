@@ -109,6 +109,43 @@
       </div>
     </div>
 
+    <details id="chapterStudyGuide" class="hidden shrink-0 rounded-xl border border-slate-200 bg-white px-4 py-3">
+      <summary class="cursor-pointer text-sm font-bold text-indigo-700">Chapter 1 Study Guide</summary>
+      <div class="mt-3 space-y-4 text-sm leading-relaxed text-slate-700">
+        <div>
+          <h3 class="font-bold text-slate-900">The Framing Question</h3>
+          <p>How did the Louisiana Purchase and the Lewis and Clark Expedition contribute to the growth of the United States?</p>
+          <p class="mt-1">The purchase added a large area of land and helped the United States keep using New Orleans for trade. The expedition brought back maps and information about the land, rivers, plants, animals, and Native American peoples.</p>
+        </div>
+        <dl class="grid gap-3 sm:grid-cols-2">
+          <div>
+            <dt class="font-bold text-slate-900">Moving West</dt>
+            <dd>Some settlers walked, rode horses, or took wagons west. Others traveled on rivers in a <strong>flatboat</strong>, a wooden boat with a flat bottom and square corners that could carry people and goods. Native American peoples already lived on the land.</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-slate-900">The Louisiana Purchase</dt>
+            <dd>A <strong>territory</strong> is an area of land belonging to a government. In 1803, under <strong>President Thomas Jefferson</strong>, the United States bought the Louisiana Territory from France for $15 million.</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-slate-900">The Expedition</dt>
+            <dd>A <strong>corps</strong> is a group that works together. Meriwether <strong>Lewis</strong> and William <strong>Clark</strong> led the <strong>Corps of Discovery</strong> up the <strong>Missouri River</strong> from near St. Louis in May 1804.</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-slate-900">Sacagawea</dt>
+            <dd>An <strong>interpreter</strong> helps people who speak different languages understand each other. Sacagawea, a <strong>Shoshone</strong> woman, helped the explorers trade with the Shoshone for horses. The group met them near the <strong>source</strong>, or beginning, of the Missouri River.</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-slate-900">Reaching the West</dt>
+            <dd>The <strong>Continental Divide</strong> is a line high in the Rockies that separates water flowing east from water flowing west. The group went down the <strong>Snake River</strong> into the Columbia River and reached the Pacific Ocean in <strong>November 1805</strong>.</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-slate-900">The Return Trip</dt>
+            <dd>Clark named a large rock <strong>Pompy’s Tower</strong> after Sacagawea’s son, who was called <strong>Pomp</strong> or <strong>Little Pomp</strong>. It was later named <strong>Pompey’s Pillar</strong>. The group returned to St. Louis in September 1806. The <strong>Gateway Arch</strong> in St. Louis helps people remember the journey west.</dd>
+          </div>
+        </dl>
+      </div>
+    </details>
+
     <!-- Current Session Progress Overview (Always 3 columns even on mobile to save vertical space) -->
     <div class="grid grid-cols-3 gap-2 sm:gap-4 shrink-0">
       <div class="bg-white p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
@@ -227,8 +264,8 @@
         <span id="questionCounterText" class="text-[11px] sm:text-xs font-mono text-slate-400 shrink-0">1 / 100</span>
       </div>
 
-      <!-- Question Body (Automatically scales & centers without scrolling) -->
-      <div class="p-3.5 sm:p-6 flex-1 flex flex-col justify-between gap-2.5 sm:gap-4 min-h-0 overflow-y-auto custom-scrollbar">
+      <!-- Question and answer explanations -->
+      <div id="questionBody" class="p-3.5 sm:p-6 flex-1 flex flex-col justify-between gap-2.5 sm:gap-4 min-h-0 overflow-y-auto custom-scrollbar">
         <div class="flex flex-col gap-2.5 sm:gap-4 my-auto">
           <h3 id="questionText" class="text-sm sm:text-lg md:text-xl font-semibold text-slate-900 leading-snug">
             Loading question...
@@ -243,6 +280,7 @@
           <div id="rationaleBox" class="hidden rounded-xl p-2.5 sm:p-3.5 border text-xs sm:text-sm leading-snug transition-all">
             <div class="font-semibold mb-0.5 flex items-center gap-1.5" id="rationaleHeader"></div>
             <p id="rationaleText" class="text-slate-700"></p>
+            <ul id="choiceFeedback" class="hidden space-y-2 mt-2"></ul>
           </div>
         </div>
 
@@ -1343,7 +1381,9 @@
       document.getElementById("topicSubtitle").textContent = topic.subtitle;
       document.getElementById("topicTitle").textContent = topic.title;
       document.getElementById("topicQuestionCount").textContent = `${topic.questions.length} Multiple-Choice Questions`;
-      document.getElementById("chapterSources").classList.toggle("hidden", id !== "louisiana-purchase");
+      const isChapter = id === "louisiana-purchase";
+      document.getElementById("chapterSources").classList.toggle("hidden", !isChapter);
+      document.getElementById("chapterStudyGuide").classList.toggle("hidden", !isChapter);
       document.getElementById("navigatorDrawer").classList.add("hidden");
       renderAll();
     }
@@ -1371,15 +1411,28 @@
         if (savedState) {
           const parsed = JSON.parse(savedState);
           if (parsed && typeof parsed.currentIndex === "number" && parsed.answers) {
-            const validOrder = Array.isArray(parsed.questionOrder) && parsed.questionOrder.length === topic.questions.length
-              ? parsed.questionOrder
-              : generateShuffledOrder();
-            state = {
-              currentIndex: parsed.currentIndex,
-              answers: parsed.answers,
-              questionOrder: validOrder,
-              activeView: "dashboard"
-            };
+            const savedOrder = parsed.questionOrder;
+            const isLegacyChapter = topic === TOPICS["louisiana-purchase"] && savedOrder?.length === 24;
+            const isValidOrder = Array.isArray(savedOrder)
+              && (savedOrder.length === topic.questions.length || isLegacyChapter)
+              && new Set(savedOrder).size === savedOrder.length
+              && savedOrder.every(index => Number.isInteger(index) && index >= 0 && index < savedOrder.length);
+
+            if (isValidOrder && Number.isInteger(parsed.currentIndex)
+              && parsed.currentIndex >= 0 && parsed.currentIndex < savedOrder.length) {
+              // Answers are keyed by display position. Keep those positions when appending new questions.
+              const questionOrder = isLegacyChapter
+                ? [...savedOrder, ...state.questionOrder.filter(index => index >= savedOrder.length)]
+                : savedOrder;
+
+              state = {
+                currentIndex: parsed.currentIndex,
+                answers: parsed.answers,
+                questionOrder,
+                activeView: "dashboard"
+              };
+              if (isLegacyChapter) saveActiveState();
+            }
           }
         }
       } catch (e) {
@@ -1583,7 +1636,12 @@
       document.getElementById("partBadge").textContent = `Part ${item.part}`;
       document.getElementById("partTitle").textContent = item.partName.replace(`Part ${item.part}: `, "");
       document.getElementById("questionCounterText").textContent = `${idx + 1} / ${topic.questions.length}`;
-      document.getElementById("questionText").textContent = `${idx + 1}. ${item.q}`;
+      const questionText = document.getElementById("questionText");
+      const questionLabel = `${idx + 1}. ${item.q}`;
+      if (questionText.textContent !== questionLabel) {
+        document.getElementById("questionBody").scrollTop = 0;
+      }
+      questionText.textContent = questionLabel;
 
       const optionsContainer = document.getElementById("optionsContainer");
       optionsContainer.innerHTML = "";
@@ -1635,6 +1693,10 @@
       const rationaleBox = document.getElementById("rationaleBox");
       const rationaleHeader = document.getElementById("rationaleHeader");
       const rationaleText = document.getElementById("rationaleText");
+      const choiceFeedback = document.getElementById("choiceFeedback");
+      choiceFeedback.replaceChildren();
+      choiceFeedback.classList.toggle("hidden", !item.feedback);
+      rationaleText.classList.toggle("hidden", Boolean(item.feedback));
 
       if (hasAnswered) {
         const isCorrect = userAns === item.correct;
@@ -1643,10 +1705,27 @@
             ? "bg-emerald-50/70 border-emerald-200 text-emerald-950"
             : "bg-amber-50/80 border-amber-200 text-amber-950"
         }`;
-        rationaleHeader.innerHTML = isCorrect
-          ? `<span class="text-emerald-700">✓ Rationale</span>`
-          : `<span class="text-amber-800">Explanation (Answer: ${letters[item.correct]})</span>`;
-        rationaleText.textContent = item.rationale;
+        if (item.feedback) {
+          rationaleHeader.textContent = "Why each answer is right or wrong";
+          const otherChoices = [...item.options.keys()].filter(choice => choice !== item.correct);
+          const feedbackOrder = [item.correct, ...otherChoices];
+          for (const choice of feedbackOrder) {
+            const row = document.createElement("li");
+            const label = document.createElement("strong");
+            const result = choice === item.correct ? "Correct" : "Incorrect";
+            const selected = choice === userAns ? " (your answer)" : "";
+            label.textContent = `${letters[choice]}. ${item.options[choice]} — ${result}${selected}`;
+            const reason = document.createElement("p");
+            reason.textContent = item.feedback[choice];
+            row.append(label, reason);
+            choiceFeedback.append(row);
+          }
+        } else {
+          rationaleHeader.innerHTML = isCorrect
+            ? `<span class="text-emerald-700">✓ Rationale</span>`
+            : `<span class="text-amber-800">Explanation (Answer: ${letters[item.correct]})</span>`;
+          rationaleText.textContent = item.rationale;
+        }
       } else {
         rationaleBox.className = "hidden";
       }
@@ -1720,7 +1799,12 @@
       saveActiveState();
       renderAll();
 
-      // Check if all questions are now answered
+      if (getQuestionAt(idx).feedback) {
+        document.getElementById("rationaleBox").scrollIntoView({ block: "start" });
+        return;
+      }
+
+      // The geography quiz opens the completion dialog automatically.
       const metrics = calculateCurrentMetrics();
       if (metrics.takenCount === metrics.totalQuestions) {
         openSubmitModal(true);
