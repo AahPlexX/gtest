@@ -1,0 +1,8 @@
+---
+layout: null
+---
+{
+  "revision": {{ site.github.build_revision | jsonify }},
+  "version": {{ site.data.release.version | jsonify }},
+  "notes": {{ site.data.release.notes | jsonify }}
+}
