@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>North America & U.S. Regions Quiz</title>
+  <title>Social Studies Quizzes</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -32,19 +32,19 @@
   <header class="bg-white border-b border-slate-200 shrink-0 z-30 shadow-2xs">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-12 sm:h-14 flex items-center justify-between gap-2">
       <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-2xs shrink-0">
+        <div id="topicInitials" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-2xs shrink-0">
           NA
         </div>
         <div class="truncate">
-          <h1 class="font-bold text-slate-900 text-sm sm:text-base leading-tight truncate">Geography Assessment</h1>
-          <p class="text-[11px] text-slate-500 hidden sm:block truncate">North America, Equator, Prime Meridian & U.S. Regions</p>
+          <h1 id="topicHeader" class="font-bold text-slate-900 text-sm sm:text-base leading-tight truncate">Geography Assessment</h1>
+          <p id="topicSubtitle" class="text-[11px] text-slate-500 hidden sm:block truncate">North America, Equator, Prime Meridian & U.S. Regions</p>
         </div>
       </div>
 
       <!-- Real-Time Progress & Actions -->
       <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         <div id="liveStatsBadge" class="hidden md:flex items-center gap-2 bg-slate-100 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-700">
-          <span>Answered: <strong id="headerAnsweredCount" class="text-indigo-600">0</strong>/100</span>
+          <span>Answered: <strong id="headerAnsweredCount" class="text-indigo-600">0/100</strong></span>
           <span class="text-slate-300">|</span>
           <span>Accuracy: <strong id="headerAccuracy" class="text-emerald-600">0%</strong></span>
         </div>
@@ -65,17 +65,36 @@
   </header>
 
   <!-- VIEW 1: Dashboard & Score History (Overview) - Fits in 100dvh without page scroll -->
-  <div id="dashboardView" class="max-w-5xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-3 sm:py-5 flex-1 flex flex-col gap-3 sm:gap-4 min-h-0 overflow-hidden">
+  <div id="dashboardView" class="max-w-5xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-3 sm:py-5 flex-1 flex flex-col gap-3 sm:gap-4 min-h-0 overflow-y-auto">
+    <div class="shrink-0">
+      <label for="topicSelect" class="block mb-1 text-xs font-semibold text-slate-700">Choose a topic</label>
+      <select id="topicSelect" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900">
+        <option value="geography">North America &amp; U.S. Regions</option>
+        <option value="louisiana-purchase">A Growing Nation · Chapter 1</option>
+      </select>
+    </div>
+
     <!-- Hero Launch Card -->
     <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-2xs shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
       <div class="space-y-1 max-w-xl">
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-indigo-50 text-indigo-700">
+        <span id="topicQuestionCount" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-indigo-50 text-indigo-700">
           100 Multiple-Choice Questions
         </span>
-        <h2 class="text-base sm:text-xl font-bold text-slate-900 leading-snug">North America & U.S. Regions Assessment</h2>
+        <h2 id="topicTitle" class="text-base sm:text-xl font-bold text-slate-900 leading-snug">North America & U.S. Regions Assessment</h2>
         <p class="text-xs text-slate-600 leading-relaxed hidden sm:block">
           Enter the standalone focus mode to take the assessment without distractions. Progress is automatically saved.
         </p>
+        <details id="chapterSources" class="hidden text-xs text-slate-600">
+          <summary class="cursor-pointer text-indigo-700">Chapter sources and credit</summary>
+          <p class="mt-1">
+            This quiz adapts the Bayou Bridges Grade 3
+            <a class="underline" href="https://doe.louisiana.gov/docs/default-source/academic-curriculum/unit-3-a-growing-nation-student-reader.pdf#page=6">Student Reader (pp. 2–14)</a>
+            and <a class="underline" href="https://doe.louisiana.gov/docs/default-source/academic-curriculum/unit-3-a-growing-nation-teacher-guide.pdf#page=43">Teacher Guide assessment (pp. 37–40)</a>.
+            Based on an original work of the Core Knowledge® Foundation and additions from the Louisiana Department of Education
+            under <a class="underline" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.
+            The adaptations use the same license. Neither organization endorses this quiz.
+          </p>
+        </details>
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
         <button id="resetAttemptBtn" class="px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 transition text-center hidden">
@@ -122,11 +141,11 @@
     </div>
 
     <!-- Persistent Score History Section (Flex-1 with internal scroll if list gets long) -->
-    <section id="scoreHistorySection" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs flex-1 flex flex-col min-h-0 overflow-hidden">
+    <section id="scoreHistorySection" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs flex-1 flex flex-col min-h-32 overflow-hidden">
       <div class="px-4 py-2.5 sm:px-5 sm:py-3.5 border-b border-slate-200 flex items-center justify-between shrink-0">
         <div class="min-w-0 pr-2">
           <h2 class="text-xs sm:text-sm font-bold text-slate-900">Recorded Score History</h2>
-          <p class="text-[11px] text-slate-500 truncate">Stored upon completion or early finish (XX/100 + accuracy %).</p>
+          <p class="text-[11px] text-slate-500 truncate">Scores for this topic are saved when you finish.</p>
         </div>
         <button id="clearHistoryBtn" class="text-xs text-rose-600 hover:text-rose-700 font-semibold shrink-0 hidden">Clear History</button>
       </div>
@@ -149,7 +168,7 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            <span>Home</span>
+            <span>Topics</span>
           </button>
           <span class="text-xs font-medium text-slate-600 truncate">
             <strong id="statAnswered" class="text-slate-900">0/100</strong>
@@ -185,14 +204,13 @@
         </div>
         <div>
           <div class="flex items-center justify-between mb-1.5">
-            <h3 class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Question Map (1–100)</h3>
+            <h3 class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Question Map</h3>
             <div class="flex items-center gap-2 text-[10px] text-slate-500">
               <span class="inline-block w-2 h-2 rounded-xs bg-emerald-500"></span> Correct
               <span class="inline-block w-2 h-2 rounded-xs bg-rose-500"></span> Wrong
             </div>
           </div>
           <div id="questionGrid" class="grid grid-cols-10 gap-1 max-h-40 overflow-y-auto custom-scrollbar pr-1">
-            <!-- 1-100 buttons -->
           </div>
         </div>
       </div>
@@ -298,8 +316,9 @@
     </div>
   </div>
 
+  <script src="louisiana-purchase.js"></script>
   <script>
-    const QUIZ_DATA = [
+    const GEOGRAPHY_QUESTIONS = [
       // Part 1: North America, Equator, and Prime Meridian (1 - 25)
       {
         part: 1,
@@ -1269,18 +1288,68 @@
       }
     ];
 
-    const PARTS = [
-      { id: 1, title: "Part 1: North America, Equator & Prime Meridian", range: [0, 24] },
-      { id: 2, title: "Part 2: New England Region", range: [25, 49] },
-      { id: 3, title: "Part 3: Mid-Atlantic Region", range: [50, 74] },
-      { id: 4, title: "Part 4: Southern Region", range: [75, 99] }
+    const GEOGRAPHY_PARTS = [
+      { id: 1, title: "Part 1: North America, Equator & Prime Meridian" },
+      { id: 2, title: "Part 2: New England Region" },
+      { id: 3, title: "Part 3: Mid-Atlantic Region" },
+      { id: 4, title: "Part 4: Southern Region" }
     ];
 
-    const STORAGE_KEY_STATE = "na_regions_quiz_active_state_v1";
-    const STORAGE_KEY_HISTORY = "na_regions_quiz_score_history_v1";
+    const TOPICS = {
+      geography: {
+        initials: "NA",
+        header: "Geography Assessment",
+        subtitle: "North America, Equator, Prime Meridian & U.S. Regions",
+        title: "North America & U.S. Regions Assessment",
+        questions: GEOGRAPHY_QUESTIONS,
+        parts: GEOGRAPHY_PARTS,
+        stateKey: "na_regions_quiz_active_state_v1",
+        historyKey: "na_regions_quiz_score_history_v1"
+      },
+      "louisiana-purchase": {
+        initials: "LA",
+        header: "A Growing Nation",
+        subtitle: "Bayou Bridges Grade 3 · Chapter 1",
+        title: "The Louisiana Purchase and the Corps of Discovery",
+        questions: LOUISIANA_PURCHASE_QUESTIONS,
+        parts: LOUISIANA_PURCHASE_PARTS,
+        stateKey: "louisiana_purchase_quiz_active_state_v1",
+        historyKey: "louisiana_purchase_quiz_score_history_v1"
+      }
+    };
+    const topicSelect = document.getElementById("topicSelect");
+    let topic;
+    let state;
+    let scoreHistory;
+    let pendingConfirmAction = null;
+
+    function freshAttempt() {
+      return {
+        currentIndex: 0,
+        answers: {},
+        questionOrder: generateShuffledOrder(),
+        activeView: "dashboard"
+      };
+    }
+
+    function selectTopic(id) {
+      topic = TOPICS[id];
+      state = freshAttempt();
+      scoreHistory = [];
+      loadPersistedData();
+
+      document.getElementById("topicInitials").textContent = topic.initials;
+      document.getElementById("topicHeader").textContent = topic.header;
+      document.getElementById("topicSubtitle").textContent = topic.subtitle;
+      document.getElementById("topicTitle").textContent = topic.title;
+      document.getElementById("topicQuestionCount").textContent = `${topic.questions.length} Multiple-Choice Questions`;
+      document.getElementById("chapterSources").classList.toggle("hidden", id !== "louisiana-purchase");
+      document.getElementById("navigatorDrawer").classList.add("hidden");
+      renderAll();
+    }
 
     function generateShuffledOrder() {
-      const order = Array.from({ length: QUIZ_DATA.length }, (_, i) => i);
+      const order = Array.from({ length: topic.questions.length }, (_, i) => i);
       for (let i = order.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [order[i], order[j]] = [order[j], order[i]];
@@ -1288,38 +1357,28 @@
       return order;
     }
 
-    let state = {
-      currentIndex: 0,
-      answers: {}, // { displayQuestionIndex: selectedOptionIndex }
-      questionOrder: generateShuffledOrder(), // Maps display position (0..99) -> QUIZ_DATA index
-      activeView: "quiz" // "quiz" (standalone page) or "dashboard"
-    };
-
-    let scoreHistory = [];
-    let pendingConfirmAction = null;
-
     function getQuestionAt(displayIdx) {
       const dataIdx = (state.questionOrder && state.questionOrder[displayIdx] !== undefined)
         ? state.questionOrder[displayIdx]
         : displayIdx;
-      return QUIZ_DATA[dataIdx];
+      return topic.questions[dataIdx];
     }
 
     // Load from localStorage
     function loadPersistedData() {
       try {
-        const savedState = localStorage.getItem(STORAGE_KEY_STATE);
+        const savedState = localStorage.getItem(topic.stateKey);
         if (savedState) {
           const parsed = JSON.parse(savedState);
           if (parsed && typeof parsed.currentIndex === "number" && parsed.answers) {
-            const validOrder = Array.isArray(parsed.questionOrder) && parsed.questionOrder.length === QUIZ_DATA.length
+            const validOrder = Array.isArray(parsed.questionOrder) && parsed.questionOrder.length === topic.questions.length
               ? parsed.questionOrder
               : generateShuffledOrder();
             state = {
               currentIndex: parsed.currentIndex,
               answers: parsed.answers,
               questionOrder: validOrder,
-              activeView: parsed.activeView || "quiz"
+              activeView: "dashboard"
             };
           }
         }
@@ -1328,7 +1387,7 @@
       }
 
       try {
-        const savedHistory = localStorage.getItem(STORAGE_KEY_HISTORY);
+        const savedHistory = localStorage.getItem(topic.historyKey);
         if (savedHistory) {
           const parsedHistory = JSON.parse(savedHistory);
           if (Array.isArray(parsedHistory)) {
@@ -1342,7 +1401,7 @@
 
     function saveActiveState() {
       try {
-        localStorage.setItem(STORAGE_KEY_STATE, JSON.stringify(state));
+        localStorage.setItem(topic.stateKey, JSON.stringify(state));
       } catch (e) {
         console.error("Failed to save state:", e);
       }
@@ -1350,14 +1409,14 @@
 
     function saveHistoryState() {
       try {
-        localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(scoreHistory));
+        localStorage.setItem(topic.historyKey, JSON.stringify(scoreHistory));
       } catch (e) {
         console.error("Failed to save score history:", e);
       }
     }
 
     function calculateCurrentMetrics() {
-      const totalQuestions = QUIZ_DATA.length;
+      const totalQuestions = topic.questions.length;
       const answeredIndices = Object.keys(state.answers).map(Number);
       const takenCount = answeredIndices.length;
       let correctCount = 0;
@@ -1394,7 +1453,7 @@
       if (state.activeView === "quiz") {
         dashboardView.classList.add("hidden");
         quizStandaloneView.classList.remove("hidden");
-        switchViewText.textContent = "Dashboard";
+        switchViewText.textContent = "Topics & Scores";
       } else {
         quizStandaloneView.classList.add("hidden");
         dashboardView.classList.remove("hidden");
@@ -1431,7 +1490,7 @@
       document.getElementById("dashStatCorrect").textContent = `${metrics.correctCount}`;
       document.getElementById("dashStatPercent").textContent = `${metrics.percent}%`;
 
-      document.getElementById("headerAnsweredCount").textContent = metrics.takenCount;
+      document.getElementById("headerAnsweredCount").textContent = `${metrics.takenCount}/${metrics.totalQuestions}`;
       document.getElementById("headerAccuracy").textContent = `${metrics.percent}%`;
 
       const submitEarlyBtn = document.getElementById("submitEarlyBtn");
@@ -1443,13 +1502,15 @@
       partContainer.innerHTML = "";
       const currentPart = getQuestionAt(state.currentIndex).part;
 
-      PARTS.forEach(part => {
+      topic.parts.forEach(part => {
         let partAnswered = 0;
+        let partTotal = 0;
         let firstUnansweredInPart = -1;
         let firstInPart = -1;
 
-        for (let i = 0; i < QUIZ_DATA.length; i++) {
+        for (let i = 0; i < topic.questions.length; i++) {
           if (getQuestionAt(i).part === part.id) {
+            partTotal++;
             if (firstInPart === -1) firstInPart = i;
             if (state.answers[i] !== undefined) {
               partAnswered++;
@@ -1469,8 +1530,8 @@
         btn.innerHTML = `
           <span class="truncate pr-2">${part.title}</span>
           <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${
-            partAnswered === 25 ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"
-          }">${partAnswered}/25</span>
+            partAnswered === partTotal ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"
+          }">${partAnswered}/${partTotal}</span>
         `;
         btn.addEventListener("click", () => {
           const targetIdx = firstUnansweredInPart !== -1 ? firstUnansweredInPart : (firstInPart !== -1 ? firstInPart : 0);
@@ -1482,10 +1543,10 @@
         partContainer.appendChild(btn);
       });
 
-      // Render 1-100 Question Map
+      // Render Question Map
       const grid = document.getElementById("questionGrid");
       grid.innerHTML = "";
-      for (let idx = 0; idx < QUIZ_DATA.length; idx++) {
+      for (let idx = 0; idx < topic.questions.length; idx++) {
         const item = getQuestionAt(idx);
         const btn = document.createElement("button");
         const isCurrent = idx === state.currentIndex;
@@ -1521,7 +1582,7 @@
 
       document.getElementById("partBadge").textContent = `Part ${item.part}`;
       document.getElementById("partTitle").textContent = item.partName.replace(`Part ${item.part}: `, "");
-      document.getElementById("questionCounterText").textContent = `${idx + 1} / ${QUIZ_DATA.length}`;
+      document.getElementById("questionCounterText").textContent = `${idx + 1} / ${topic.questions.length}`;
       document.getElementById("questionText").textContent = `${idx + 1}. ${item.q}`;
 
       const optionsContainer = document.getElementById("optionsContainer");
@@ -1592,7 +1653,7 @@
 
       // Navigation buttons
       document.getElementById("prevBtn").disabled = idx === 0;
-      document.getElementById("nextBtn").disabled = idx === QUIZ_DATA.length - 1;
+      document.getElementById("nextBtn").disabled = idx === topic.questions.length - 1;
     }
 
     function renderHistory() {
@@ -1659,7 +1720,7 @@
       saveActiveState();
       renderAll();
 
-      // Check if all 100 questions are now answered
+      // Check if all questions are now answered
       const metrics = calculateCurrentMetrics();
       if (metrics.takenCount === metrics.totalQuestions) {
         openSubmitModal(true);
@@ -1676,7 +1737,7 @@
 
       if (isFullCompletion) {
         title.textContent = "Quiz Completed!";
-        desc.textContent = "You have answered all 100 questions. Save this result to your persistent score history.";
+        desc.textContent = `You have answered all ${metrics.totalQuestions} questions. Save this result to your persistent score history.`;
       } else {
         title.textContent = "Submit Early & Record Score?";
         desc.textContent = `You have answered ${metrics.takenCount} out of ${metrics.totalQuestions} questions. Your percentage score is calculated strictly from the ${metrics.takenCount} questions taken, and will be recorded alongside "${metrics.takenCount}/${metrics.totalQuestions} Questions".`;
@@ -1721,12 +1782,7 @@
       saveHistoryState();
 
       // Reset active attempt with a freshly randomized question order and switch to dashboard
-      state = {
-        currentIndex: 0,
-        answers: {},
-        questionOrder: generateShuffledOrder(),
-        activeView: "dashboard"
-      };
+      state = freshAttempt();
       saveActiveState();
       closeSubmitModal();
       renderAll();
@@ -1768,7 +1824,7 @@
     });
 
     document.getElementById("nextBtn").addEventListener("click", () => {
-      if (state.currentIndex < QUIZ_DATA.length - 1) {
+      if (state.currentIndex < topic.questions.length - 1) {
         state.currentIndex++;
         saveActiveState();
         renderAll();
@@ -1776,8 +1832,8 @@
     });
 
     document.getElementById("nextUnansweredBtn").addEventListener("click", () => {
-      for (let i = 1; i <= QUIZ_DATA.length; i++) {
-        const candidate = (state.currentIndex + i) % QUIZ_DATA.length;
+      for (let i = 1; i <= topic.questions.length; i++) {
+        const candidate = (state.currentIndex + i) % topic.questions.length;
         if (state.answers[candidate] === undefined) {
           state.currentIndex = candidate;
           saveActiveState();
@@ -1856,7 +1912,7 @@
       if (state.activeView !== "quiz") return;
       if (!document.getElementById("submitModal").classList.contains("hidden")) return;
       if (!document.getElementById("confirmModal").classList.contains("hidden")) return;
-      if (e.key === "ArrowRight" && state.currentIndex < QUIZ_DATA.length - 1) {
+      if (e.key === "ArrowRight" && state.currentIndex < topic.questions.length - 1) {
         state.currentIndex++;
         saveActiveState();
         renderAll();
@@ -1867,9 +1923,8 @@
       }
     });
 
-    // Initialize
-    loadPersistedData();
-    renderAll();
+    topicSelect.addEventListener("change", () => selectTopic(topicSelect.value));
+    selectTopic(topicSelect.value);
   </script>
 </body>
 </html>
