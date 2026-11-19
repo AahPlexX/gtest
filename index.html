@@ -1,3 +1,5 @@
+---
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,7 +72,7 @@
       <label for="topicSelect" class="block mb-1 text-xs font-semibold text-slate-700">Choose a topic</label>
       <select id="topicSelect" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900">
         <option value="geography">North America &amp; U.S. Regions</option>
-        <option value="louisiana-purchase">A Growing Nation · Chapter 1</option>
+        <option value="louisiana-purchase" selected>A Growing Nation · Chapter 1</option>
       </select>
     </div>
 
@@ -354,7 +356,7 @@
     </div>
   </div>
 
-  <script src="louisiana-purchase.js"></script>
+  <script src="louisiana-purchase.js?v={{ site.github.build_revision }}"></script>
   <script>
     const GEOGRAPHY_QUESTIONS = [
       // Part 1: North America, Equator, and Prime Meridian (1 - 25)
@@ -2008,6 +2010,8 @@
     });
 
     topicSelect.addEventListener("change", () => selectTopic(topicSelect.value));
+    const requestedTopic = new URLSearchParams(window.location.search).get("topic");
+    if (Object.hasOwn(TOPICS, requestedTopic)) topicSelect.value = requestedTopic;
     selectTopic(topicSelect.value);
   </script>
 </body>
